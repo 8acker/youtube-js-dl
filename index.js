@@ -89,7 +89,7 @@ app.get('/youtube-dl/:id', function(req, res) {
   });
 });
 
-app.get('/youtube-dl', function(req, res) {
+app.get('/', function(req, res) {
     res.status(200);
     res.set('Content-Type', mime.lookup('json'));
     return res.end(JSON.stringify({

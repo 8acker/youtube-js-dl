@@ -99,6 +99,6 @@ app.get('/youtube-dl', function(req, res) {
     }, null, 2));
 });
 
-app.listen(9990, function () {
-  console.log('Youtube Downloader listening on port 9990!');
+var listener = app.listen(process.env.PORT || 9990, function(){
+  console.log('Youtube Downloader listening on port', listener.address().port);
 });

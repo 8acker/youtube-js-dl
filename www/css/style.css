@@ -1,6 +1,15 @@
 body {
   padding-top: 50px;
 }
+.url {
+  padding: 8px;
+  position: relative;
+  font-size: 18px;
+  overflow: visible;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  width: 450px
+}
 .starter-template {
   padding: 40px 15px;
   text-align: center;

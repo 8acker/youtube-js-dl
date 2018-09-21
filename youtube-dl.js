@@ -1,5 +1,4 @@
 const { spawn } = require('child_process');
-var pjson = require('./package.json');
 var uuid = require('uuid');
 var bodyParser = require('body-parser');
 var express = require('express');
@@ -16,7 +15,8 @@ rule.minute = 0;
 
 schedule.scheduleJob(rule, function(){
     var todayFormat = dateFormat(new Date(), "dd-mm-yyyy");
-    var filesFormat =  "*" + todayFormat.slice(2) + '-*.mp3';
+    var filesFormat =  todayFormat + '-*.mp3';
+    filesFormat = "*" + filesFormat.slice(2);
     glob(filesFormat, function(error, files) {
         console.log(error || '');
         files = files.filter(filename => {
@@ -31,6 +31,13 @@ schedule.scheduleJob(rule, function(){
 var app = express();
 
 app.use(bodyParser.json());
+
+// Allow browser access
+app.all('/*', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
+    next();
+});
 
 app.post('/youtube-dl/download', function(req, res) {
   var youtube_url = req.body.url;
@@ -82,7 +89,7 @@ app.get('/youtube-dl/:id', function(req, res) {
   });
 });
 
-app.get('/youtube-dl/', function(req, res) {
+app.get('/', function(req, res) {
     res.status(200);
     res.set('Content-Type', mime.lookup('json'));
     return res.end(JSON.stringify({
@@ -92,15 +99,6 @@ app.get('/youtube-dl/', function(req, res) {
     }, null, 2));
 });
 
-function youtubeDl(cb) {
-  var listener = app.listen(process.env.PORT || pjson.config.port || 9990, function(error){
-    console.log('Youtube Downloader listening on port', listener.address().port);
-    return cb(error);
-  });
-}
-
-module.exports = youtubeDl;
-
-youtubeDl(function() {
-  spawn("npm", ['start'])
-})
+var listener = app.listen(process.env.PORT || 9990, function(){
+  console.log('Youtube Downloader listening on port', listener.address().port);
+});

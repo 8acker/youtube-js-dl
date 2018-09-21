@@ -1,4 +1,4 @@
-FROM node
+FROM node:8.12.0
 
 RUN apt-get update
 RUN apt-get install -y libav-tools youtube-dl
@@ -9,4 +9,6 @@ RUN npm install
 EXPOSE 9990
 
 COPY . .
-CMD ["npm","start"]
+
+ENTRYPOINT [ "npm" ]
+CMD [ "start"]
